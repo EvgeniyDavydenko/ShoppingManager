@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     toBuyFragment = ToBuyFragment.getInstance();
     shoppingCartFragment = ShoppingCartFragment.getInstance();
 
-
     BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
       @Override
