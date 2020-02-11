@@ -15,21 +15,29 @@ import android.view.ViewGroup;
 
 import com.example.shoppingmanager.R;
 import com.example.shoppingmanager.adapters.ToBuyAdapter;
+import com.example.shoppingmanager.data.datamodel.Product;
+import com.example.shoppingmanager.interfaces.ProductContract;
+
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ToBuyFragment extends Fragment {
+public class ToBuyFragment extends Fragment implements ProductContract.ToBuyFragmentBridge {
 
   private RecyclerView toBuyRecyclerView;
   private ToBuyAdapter toBuyAdapter;
 
-  public static Fragment getInstance() {
-    return new ToBuyFragment();
+  private List<Product> productList;
+
+  public static ToBuyFragment getInstance(List<Product> productList) {
+    return new ToBuyFragment(productList);
   }
 
 
-  public ToBuyFragment() {
+  public ToBuyFragment(List<Product> productList) {
+    this.productList = productList;
     // Required empty public constructor
   }
 
@@ -54,7 +62,11 @@ public class ToBuyFragment extends Fragment {
     toBuyRecyclerView.setAdapter(toBuyAdapter);
     toBuyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-    toBuyAdapter.setData();
+//    toBuyAdapter.setData();
   }
 
+  @Override
+  public void toBuyProductAdded(Product product) {
+    toBuyAdapter.setData(product);
+  }
 }

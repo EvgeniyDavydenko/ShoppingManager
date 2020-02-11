@@ -16,7 +16,7 @@ import com.example.shoppingmanager.R;
  */
 public class ShoppingCartFragment extends Fragment {
 
-  public static Fragment getInstance(){
+  public static ShoppingCartFragment getInstance(){
     return new ShoppingCartFragment();
   }
 
