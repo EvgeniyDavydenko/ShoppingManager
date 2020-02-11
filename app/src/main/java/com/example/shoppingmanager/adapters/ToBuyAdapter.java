@@ -1,6 +1,7 @@
 package com.example.shoppingmanager.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,13 +77,18 @@ public class ToBuyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
   private class ToByHolder extends RecyclerView.ViewHolder {
     TextView textView;
+    View view;
 
     ToByHolder(View itemView) {
       super(itemView);
+      view = itemView;
       textView = itemView.findViewById(R.id.listItem);
     }
 
     void showData(int position) {
+      if (position % 2 != 0) {
+        view.setBackgroundColor(Color.LTGRAY);
+      }
       textView.setText(productList.get(position).getProductName());
     }
 
