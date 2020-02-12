@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity implements ProductContract.M
   }
 
   private void initView() {
-    toBuyFragment = ToBuyFragment.getInstance(toBuyProductsList);
-    shoppingCartFragment = ShoppingCartFragment.getInstance();
+    toBuyFragment = ToBuyFragment.getInstance(toBuyProductsList, this::productMovedToCard);
+    shoppingCartFragment = ShoppingCartFragment.getInstance(cartProductList);
     toBuyFragmentBridge = toBuyFragment;
 
     addProductButton = findViewById(R.id.addProductButton);
@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements ProductContract.M
 
     if (requestCode == ADD_PRODUCT_CODE) {
       Product product = data.getParcelableExtra("newProduct");
+      toBuyProductsList.add(product);
       toBuyFragmentBridge.toBuyProductAdded(product);
       Log.d(getClass().getName(), "newProductName = " + product.getProductName());
       Log.d(getClass().getName(), "newProductID = " + product.getProductID());
@@ -101,5 +102,6 @@ public class MainActivity extends AppCompatActivity implements ProductContract.M
   @Override
   public void productMovedToCard(Product product) {
     cartProductList.add(product);
+    Log.d(getClass().getName(), "productMovedToCard " + cartProductList.size());
   }
 }
