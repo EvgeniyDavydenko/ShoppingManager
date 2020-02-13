@@ -1,8 +1,10 @@
 package com.example.shoppingmanager.fragments;
 
 
-import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,14 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.example.shoppingmanager.R;
 import com.example.shoppingmanager.adapters.ShoppingCartAdapter;
 import com.example.shoppingmanager.data.datamodel.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,14 +30,12 @@ public class ShoppingCartFragment extends Fragment {
   private ShoppingCartAdapter shoppingCartAdapter;
 
   public static ShoppingCartFragment getInstance(List<Product> productList){
-    return new ShoppingCartFragment(productList);
+    ShoppingCartFragment shoppingCartFragment = new ShoppingCartFragment();
+    Bundle bundle = new Bundle();
+    bundle.putParcelableArrayList("productList", (ArrayList<Product>) productList);
+    shoppingCartFragment.setArguments(bundle);
+    return shoppingCartFragment;
   }
-
-  public ShoppingCartFragment( List<Product> productList) {
-    this.productList = productList;
-    // Required empty public constructor
-  }
-
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,6 +47,8 @@ public class ShoppingCartFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
+    productList = getArguments().getParcelableArrayList("productList");
     initView();
   }
 

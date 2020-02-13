@@ -1,7 +1,12 @@
 package com.example.shoppingmanager.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,19 +15,13 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.example.shoppingmanager.R;
 import com.example.shoppingmanager.adapters.ToBuyAdapter;
 import com.example.shoppingmanager.data.datamodel.Product;
 import com.example.shoppingmanager.interfaces.ProductContract;
-import com.example.shoppingmanager.interfaces.RVItemRemoved;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import static androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE;
 
@@ -37,17 +36,19 @@ public class ToBuyFragment extends Fragment implements ProductContract.ToBuyFrag
   private List<Product> productList;
   private ProductContract.MainActivityBridge mainActivityBridge;
 
-  public static ToBuyFragment getInstance(List<Product> productList, ProductContract.MainActivityBridge mainActivityBridge) {
-    return new ToBuyFragment(productList, mainActivityBridge);
+  public static ToBuyFragment getInstance(List<Product> productList) {
+    ToBuyFragment toBuyFragment = new ToBuyFragment();
+    Bundle bundle = new Bundle();
+    bundle.putParcelableArrayList("productList", (ArrayList<Product>) productList);
+    toBuyFragment.setArguments(bundle);
+    return toBuyFragment;
   }
 
-
-  public ToBuyFragment(List<Product> productList, ProductContract.MainActivityBridge mainActivityBridge) {
-    this.productList = productList;
-    this.mainActivityBridge = mainActivityBridge;
-    // Required empty public constructor
+  @Override
+  public void onAttach(@NonNull Context context) {
+    super.onAttach(context);
+    this.mainActivityBridge = (ProductContract.MainActivityBridge) context;
   }
-
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,6 +61,7 @@ public class ToBuyFragment extends Fragment implements ProductContract.ToBuyFrag
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    productList = getArguments().getParcelableArrayList("productList");
 
     initView();
     Log.d(getClass().getName(), "ToBuyFragment onViewCreated");

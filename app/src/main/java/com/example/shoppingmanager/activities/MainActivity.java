@@ -1,16 +1,16 @@
 package com.example.shoppingmanager.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.shoppingmanager.R;
 import com.example.shoppingmanager.data.datamodel.Product;
@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements ProductContract.M
   private ToBuyFragment toBuyFragment;
   private ShoppingCartFragment shoppingCartFragment;
   private FloatingActionButton addProductButton;
+  private Fragment currentFragment;
 
   private List<Product> toBuyProductsList = new ArrayList<>();
   private List<Product> cartProductList = new ArrayList<>();
@@ -41,12 +42,32 @@ public class MainActivity extends AppCompatActivity implements ProductContract.M
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    if (savedInstanceState != null) {
+      toBuyProductsList = savedInstanceState.getParcelableArrayList("toBuyProductsList");
+      cartProductList = savedInstanceState.getParcelableArrayList("cartProductList");
+      currentFragment = getSupportFragmentManager().getFragment(savedInstanceState, "currentFragment");
+    }
+
     initView();
-    replaceFragment(toBuyFragment);
+    if (currentFragment != null) {
+      replaceFragment(currentFragment);
+    } else {
+      replaceFragment(toBuyFragment);
+    }
+  }
+
+  @Override
+  public void onSaveInstanceState(@NonNull Bundle outState) {
+    super.onSaveInstanceState(outState);
+    Log.d(getClass().getName(), "onSaveInstanceState");
+    outState.putParcelableArrayList("toBuyProductsList", (ArrayList<Product>) toBuyProductsList);
+    outState.putParcelableArrayList("cartProductList", (ArrayList<Product>) cartProductList);
+
+    getSupportFragmentManager().putFragment(outState, "currentFragment", currentFragment);
   }
 
   private void initView() {
-    toBuyFragment = ToBuyFragment.getInstance(toBuyProductsList, this::productMovedToCard);
+    toBuyFragment = ToBuyFragment.getInstance(toBuyProductsList);
     shoppingCartFragment = ShoppingCartFragment.getInstance(cartProductList);
     toBuyFragmentBridge = toBuyFragment;
 
@@ -93,9 +114,10 @@ public class MainActivity extends AppCompatActivity implements ProductContract.M
   }
 
   private void replaceFragment(Fragment fragment) {
+    currentFragment = fragment;
     getSupportFragmentManager()
             .beginTransaction()
-            .replace(R.id.fragment_container, fragment, fragment.getClass().getSimpleName())
+            .replace(R.id.fragment_container, currentFragment, fragment.getClass().getSimpleName())
             .commit();
   }
 
